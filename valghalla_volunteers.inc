@@ -11,31 +11,33 @@ function _valghalla_helper_wrap_name($node, $container = 'p', $fcid = null) {
   global $language;
 
   $rsvp_map = array(
-      0 => t('Har endnu ikke bekræftet'),
-      1 => t('Har bekræftet sin deltagelse'),
-      2 => t('Har meldt afbud til dette valg'),
-      3 => t('Ønsker at blive slettet'),
+    0 => t('Har endnu ikke bekræftet'),
+    1 => t('Har bekræftet sin deltagelse'),
+    2 => t('Har meldt afbud til dette valg'),
+    3 => t('Ønsker at blive slettet'),
   );
   $rsvp_class_map = array(
-      0 => 'unknown',
-      1 => 'yes',
-      2 => 'no',
-      3 => 'never',
+    0 => 'unknown',
+    1 => 'yes',
+    2 => 'no',
+    3 => 'never',
   );
 
-  $party = taxonomy_term_load($node->field_party[$language->language][0]['tid']);
+  $party = '';
+  if ($party_field = field_get_items('node', $node, 'field_party')) {
+    $party = taxonomy_term_load($party_field[0]['tid']);
+  }
 
   $rsvp_markup = "";
 
   $fc = entity_load_single('field_collection_item', $fcid);
-  if(is_object($fc)){
-
+  if (is_object($fc)) {
     $rsvp_message = field_get_items('field_collection_item', $fc, 'field_rsvp_comment');
     $rsvp = field_get_items('field_collection_item', $fc, 'field_rsvp');
   }
 
-  if($rsvp_message){
-    if(!empty($rsvp_message[0]['value'])){
+  if ($rsvp_message) {
+    if (!empty($rsvp_message[0]['value'])) {
       $rsvp_markup = '<span class="rsvp-message-icon fa fa-envelope-o"></span><span style="display:none;" class="rsvp-message">' . $rsvp_message[0]['value'] . '</span>';
     }
   }
@@ -44,21 +46,26 @@ function _valghalla_helper_wrap_name($node, $container = 'p', $fcid = null) {
 
   $reply_link = '';
 
-  if($rsvp == 0){
+  if ($rsvp == 0 || variable_get('valghalla_volunteers_always_show_rsvp_link', FALSE)) {
     $field_token = field_get_items('field_collection_item', $fc, 'field_token');
-    $reply_link = '<a title="Svar for denne tilforordnede" class="reply edit" href="/volunteers/rsvp/'  . $field_token[0]['value'] . '"><i class="fa fa-reply"></i></a>';
+    $reply_link = '<a title="Svar for denne tilforordnede" class="reply edit" href="/volunteers/rsvp/'  . $field_token[0]['value'] . '"><span class="glyphicon glyphicon-comment"></span></a>';
   }
 
-  $display = '(' . $party->name. ') ' . $node->title . ' (' . $rsvp_map[$rsvp] . ')' . $rsvp_markup . $reply_link ;
-  return '<' . $container . ' class="volunteer ' . $rsvp_class_map[$rsvp] . '">' . $display . '</' . $container . '>';
+  $valid = '';
+  if ($external_signup_field = field_get_items('node', $node, 'field_external_signup')
+      && !($cpr_valid_date_field = field_get_items('node', $node, 'field_cpr_valid_date'))) {
+    $valid = 'notvalidated';
+  }
+
+  $display = '(' . $party->name . ') ' . $node->title . ' (' . $rsvp_map[$rsvp] . ')' . $rsvp_markup . $reply_link;
+  return '<' . $container . ' class="volunteer ' . $valid . ' ' . $rsvp_class_map[$rsvp] . '">' . $display . '</' . $container . '>';
 }
 
 /**
- * validate the login token
- * if valid, the session variable valghalla_volunteer will contain the related node
+ * Validate the login token.
  *
- * @param string $token
- * @return boolean
+ * If valid, the session variable valghalla_volunteer will contain the related
+ * node.
  */
 function _valghalla_volunteers_validate_key($token) {
   $volunteer_query = new EntityFieldQuery();
@@ -75,12 +82,7 @@ function _valghalla_volunteers_validate_key($token) {
 }
 
 /**
- * get email from its token
- *
- * @global stdClass $language
- * @staticvar array $emails
- * @param string $token
- * @return array
+ * Get email from its token.
  */
 function _valghalla_helper_get_email_by_token($token) {
   global $language;
@@ -96,8 +98,7 @@ function _valghalla_helper_get_email_by_token($token) {
       ->condition('bundle', 'email', '=')
       ->condition('field_token_value', $token, '=')
       ->execute()
-      ->fetchField()
-  ;
+      ->fetchField();
 
   $emails[$token] = FALSE;
   if ($entity_id) {
@@ -162,7 +163,7 @@ function _valghalla_helper_validate_polling_post($polling_station_id, $role_id, 
   }
   // Check if one of the free posts has the correct role id.
   foreach($free_posts as $post){
-    if($role_array[$post['title']] == $role_id){
+    if($role_array[strtolower($post['role_title'])] == $role_id){
       return TRUE;
     }
   }
@@ -187,105 +188,16 @@ function _valghalla_helper_get_role_array(){
 }
 
 /**
- * handle csv imports of volunteers
- *
- * @global stdClass $user
- * @global stdClass $language
- * @param stdClass $file_object
- * @param int $party_forced, optional party id if set all imports will have this party id set.
- * @return array
- */
-function _valghalla_helter_parse_csv_import($file_object, $party_forced = FALSE) {
-  global $user, $language;
-
-  $failed = array();
-  $counter = $added = $updated = 0;
-  if ($handle = fopen($file_object->uri, 'r')) {
-
-    while (($data = fgetcsv($handle, 1024, ";")) !== FALSE) {
-      if ($counter == 0) {
-        // header line..
-        $counter++;
-        continue;
-      }
-
-      if (empty($data[0]) || (count($data) != 5)) {
-        continue;
-      }
-
-      // extract fields into readable variables
-      list($party, $cpr, $name, $email, $phone) = $data;
-
-      if ($party_forced) {
-        $party = $party_forced;
-      }
-
-      if (FALSE == _valghalla_helper_validate_cpr($cpr)) {
-        $failed[$cpr] = $name;
-        continue;
-      }
-
-      $node = _valghalla_helper_get_volunteer_by_cpr($cpr);
-
-      if (!$node instanceof stdClass) {
-        $node = new stdClass();
-        $node->type = 'volunteers';
-        node_object_prepare($node);
-        $node->comment = 0;
-        $node->title = $name;
-        $node->language = $language->language;
-        $node->field_cpr_number[$language->language][0]['value'] = $cpr;
-
-        $added++;
-      } else {
-
-        if (($party_forced && !empty($node->field_party[$language->language][0]['tid'])) &&
-            ($node->field_party[$language->language][0]['tid'] != $party_forced)
-        ) {
-          $failed[$cpr] = $name . ' - tilhører et andet parti';
-          continue;
-        }
-
-        $updated++;
-      }
-
-      $node->field_email[$language->language][0]['email'] = $email;
-      $node->field_phone[$language->language][0]['value'] = $phone;
-      $node->field_token[$language->language][0]['value'] = user_password(8);
-
-      if ($party) {
-        if (preg_match('~^[0-9]+$~', $party)) {
-          $tid = $party;
-        } else {
-          $term = taxonomy_get_term_by_name($party);
-          $tid = array_shift(array_keys($term));
-        }
-        $node->field_party[$language->language][0]['tid'] = $tid;
-      }
-
-      node_save($node);
-      $counter++;
-    }
-    fclose($handle);
-  }
-
-  return array(
-      'added' => $added,
-      'updated' => $updated,
-      'failed' => $failed
-  );
-}
-
-/**
  * returns a keyed array of roles
  */
 function _valghalla_helper_get_roles() {
-  $data = array();
-  foreach (entity_load('node', FALSE, array('type' => 'roles')) as $item) {
-    $data[$item->nid] = $item->title;
-  }
+  trigger_error('Function ' . __FUNCTION__ . ' is deprecated, use odin_get_roles instead', E_USER_DEPRECATED);
+  return odin_get_roles();
+}
 
-  return $data;
+function _valghalla_helper_get_parties() {
+  trigger_error('Function ' . __FUNCTION__ . ' is deprecated, use odin_get_parties instead', E_USER_DEPRECATED);
+  return odin_get_parties();
 }
 
 /**
@@ -295,7 +207,7 @@ function _valghalla_helper_get_roles() {
 function _valghalla_helper_get_posts_to_fill($polling_station, $party_tid){
   $posts_to_fill = array();
 
-  $roles = _valghalla_helper_get_roles();
+  $roles = odin_get_roles();
 
   // Loop over roles and fetch count for each role on polling station.
   foreach ($roles as $role_nid => $role_title){
@@ -382,11 +294,11 @@ function _valghalla_helper_volunteers_count() {
 }
 
 /**
- * Retrieve values for tokens
+ * Retrieve values for tokens.
  *
  * @author Thomas Thune Hansen <tth@bellcom.dk>
  */
-function _valghalla_helper_get_token_values($entity){
+function _valghalla_helper_get_token_values($entity) {
   // Get host entity.
   $host_entity = $entity->hostEntity();
   // Load needed fields and nodes.
@@ -399,7 +311,7 @@ function _valghalla_helper_get_token_values($entity){
   }
 
   if ($field = field_get_items('field_collection_item', $entity, 'field_post_role')) {
-    $post_node = node_load($field [0]['target_id']);
+    $post_node = node_load($field[0]['target_id']);
   }
 
   // Empty variables.
@@ -420,15 +332,13 @@ function _valghalla_helper_get_token_values($entity){
   $time = '';
   $responsible = '';
 
-  ////////////////////////////////////
-  // Date info
+  // Date info.
   //
   $date_now = date(variable_get('valghalla_datetime_format', 'd-m-Y H:i:s'));
 
-  ////////////////////////////////////
-  // Host entity (volunteer) info
+  // Host entity (volunteer) info.
   //
-  if(is_object($host_entity)){
+  if (is_object($host_entity)) {
     $volunteer_nid = $host_entity->nid;
 
     $name = $host_entity->title;
@@ -442,71 +352,46 @@ function _valghalla_helper_get_token_values($entity){
     }
   }
 
-  ////////////////////////////////////
-  // RSVP link
+  // RSVP link.
   //
-  if($field = field_get_items('field_collection_item', $entity, 'field_token')){
+  if ($field = field_get_items('field_collection_item', $entity, 'field_token')) {
     global $base_url;
-    $link = $base_url . '/volunteers/rsvp/' . $field[0]['value'];
+    $url = $base_url . '/volunteers/rsvp/' . $field[0]['value'];
+    $link = '<a href="' . $url . '">' . $url . '</a>';
   }
 
-  ////////////////////////////////////
-  // Election info
+  // Election info.
   //
-  if(is_object($election_node)){
+  if (is_object($election_node)) {
     $election = $election_node->title;
 
-    if ($field= field_get_items('node', $election_node, 'field_date')) {
+    if ($field = field_get_items('node', $election_node, 'field_date')) {
       $election_date = date(variable_get('valghalla_date_format', 'd-m-Y'), strtotime($field[0]['value']));
     }
 
     $time_left = strtotime($field[0]['value']) - time();
-    $days = (int)($time_left / 86400);
+    $days = (int) ($time_left / 86400);
   }
 
-  ////////////////////////////////////
-  // Polling station info
+  // Polling station info.
   //
-  if(is_object($polling_station_node)){
+  if (is_object($polling_station_node)) {
     $polling_station = $polling_station_node->title;
 
-    if ($field= field_get_items('node', $polling_station_node, 'field_address_road')) {
-      $polling_station_address = $field[0]['value'] . ' ';
-    }
-
-    if ($field = field_get_items('node', $polling_station_node, 'field_address_road_no')) {
-      $polling_station_address .= $field[0]['value'];
-    }
-
-    if ($field = field_get_items('node', $polling_station_node, 'field_address_floor')) {
-      $polling_station_address .= $field[0]['value'];
-    }
-
-    if ($field = field_get_items('node', $polling_station_node, 'field_address_door')) {
-      $polling_station_address .= ', ' . $field[0]['value'] . ' ';
-    }
-
-    if ($field = field_get_items('node', $polling_station_node, 'field_address_zipcode')) {
-      $polling_station_address .= ",\n" . $field[0]['value'] . ' ';
-    }
-
-    if ($field = field_get_items('node', $polling_station_node, 'field_address_city')) {
-      $polling_station_address .= $field[0]['value'];
-    }
+    $polling_station_address = valghalla_polling_station_get_adress($polling_station_node);
 
     if ($field = field_get_items('node', $polling_station_node, 'field_contact')) {
       $responsible = $field[0]['value'];
     }
   }
 
-  ////////////////////////////////////
-  // Post info
+  // Post info.
   //
-  if(is_object($post_node)){
+  if (is_object($post_node)) {
     $position = $post_node->title;
     $position_nid = $post_node->nid;
 
-    if ($field = field_get_items('node', $post_node, 'field_time')) {
+    if ($field = field_get_items('node', $post_node, 'field_meetingtime')) {
       $time = $field[0]['value'];
     }
 
@@ -522,6 +407,7 @@ function _valghalla_helper_get_token_values($entity){
     '!email' => $email,
     '!phone' => $phone,
     '!link' => $link,
+    '!url' => $url,
     '!date_now' => $date_now,
     '!days' => $days,
     '!election' => $election,
@@ -556,9 +442,63 @@ function _valghalla_helper_get_volunteer_info_params($node) {
           <li><em>!position</em> vil blive erstattet af rollens titel</li>
           <li><em>!position_description</em> vil blive erstattet af rollens beskrivelse</li>
           <li><em>!time</em> vil blive erstattet af rollens mødetidspunkt</li>
-          <li><em>!link</em> vil blive erstattet med link til RSVP side</li>
+          <li><em>!link</em> vil blive erstattet med link til RSVP side (brug denne hvis der sendes HTML mails.)</li>
+          <li><em>!url</em> vil blive erstattet med url'en til RSVP side (brug denne hvis der sendes plain text mails.)</li>
           <li><em>!polling_station_contact</em> vil blive erstattet med kontaktpersonen på valgstedet</li>
           </ul>
           <p><em>Bemærk!</em> i nogle tilfælde vil nogle tokens ikke være tilgængelige.</p>";
 }
 
+/**
+ * _valghalla_helper_get_age_from_cpr
+ * Returns the correct age from CPR number taking century into account
+ *
+ * @param string $cpr
+ *
+ * @return int
+ * @author Henrik Farre <hf@bellcom.dk>
+ */
+function _valghalla_helper_get_age_from_cpr($cpr)
+{
+  // Based on http://kronsell.net/cpralder.htm
+  // Also see http://da.wikipedia.org/wiki/CPR-nummer#Under_eller_over_100_.C3.A5r
+  $year_prefix = 19;
+  $year        = substr($cpr, 4, 2);
+
+  switch (substr($cpr, 7, 1))
+  {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      $year_prefix = 19;
+      break;
+    case 4:
+    case 9:
+      if ($year <= 36) {
+        $year_prefix = 20;
+      }
+      break;
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+      if ($year <= 36) {
+        $year_prefix = 20;
+      }
+      if ($year >= 58) {
+        $year_prefix = 18;
+      }
+      break;
+  }
+
+  $day   = substr($cpr, 0, 2);
+  $month = substr($cpr, 2, 2);
+  $year  = $year_prefix . $year;
+
+  $date     = DateTime::createFromFormat('d-m-Y', $day . '-' . $month . '-' . $year);
+  $now      = new DateTime();
+  $interval = $now->diff($date);
+
+  return $interval->y;
+}

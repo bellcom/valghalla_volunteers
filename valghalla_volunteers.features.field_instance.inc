@@ -10,6 +10,46 @@
 function valghalla_volunteers_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'field_collection_item-field_electioninfo-field_diaet'
+  $field_instances['field_collection_item-field_electioninfo-field_diaet'] = array(
+    'bundle' => 'field_electioninfo',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'number',
+        'settings' => array(
+          'decimal_separator' => '.',
+          'prefix_suffix' => TRUE,
+          'scale' => 0,
+          'thousand_separator' => ' ',
+        ),
+        'type' => 'number_integer',
+        'weight' => 7,
+      ),
+    ),
+    'entity_type' => 'field_collection_item',
+    'field_name' => 'field_diaet',
+    'label' => 'Diæt',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => 12,
+    ),
+  );
+
   // Exported field_instance: 'field_collection_item-field_electioninfo-field_election'
   $field_instances['field_collection_item-field_electioninfo-field_election'] = array(
     'bundle' => 'field_electioninfo',
@@ -264,7 +304,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_description',
-    'label' => 'Description',
+    'label' => 'Beskrivelse',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -316,7 +356,44 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 3,
+      'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-roles-field_meeting_time'
+  $field_instances['node-roles-field_meeting_time'] = array(
+    'bundle' => 'roles',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'taxonomy',
+        'settings' => array(),
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 5,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_meeting_time',
+    'label' => 'Mødetid',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 4,
     ),
   );
 
@@ -395,7 +472,87 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 4,
+      'weight' => 5,
+    ),
+  );
+
+  // Exported field_instance: 'node-roles-field_role_hours'
+  $field_instances['node-roles-field_role_hours'] = array(
+    'bundle' => 'roles',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 7,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_role_hours',
+    'label' => 'Timer',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 3,
+    ),
+  );
+
+  // Exported field_instance: 'node-roles-field_role_weight'
+  $field_instances['node-roles-field_role_weight'] = array(
+    'bundle' => 'roles',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_role_weight',
+    'label' => 'Role Rækkefølge',
+    'required' => 0,
+    'settings' => array(
+      'max' => '',
+      'min' => '',
+      'prefix' => '',
+      'suffix' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 0,
+      'module' => 'number',
+      'settings' => array(),
+      'type' => 'number',
+      'weight' => -3,
     ),
   );
 
@@ -434,7 +591,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 7,
+      'weight' => 8,
     ),
   );
 
@@ -473,7 +630,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 6,
+      'weight' => 7,
     ),
   );
 
@@ -512,7 +669,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 5,
+      'weight' => 6,
     ),
   );
 
@@ -552,7 +709,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 19,
+      'weight' => 17,
     ),
   );
 
@@ -579,7 +736,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_city',
-    'label' => 'City',
+    'label' => 'By',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -592,7 +749,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 17,
+      'weight' => 15,
     ),
   );
 
@@ -632,7 +789,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 18,
+      'weight' => 16,
     ),
   );
 
@@ -659,7 +816,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_door',
-    'label' => 'Door / Side',
+    'label' => 'Dør / side',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -672,7 +829,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 15,
+      'weight' => 13,
     ),
   );
 
@@ -699,7 +856,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_floor',
-    'label' => 'Floor',
+    'label' => 'Sal',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -712,7 +869,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 14,
+      'weight' => 12,
     ),
   );
 
@@ -739,7 +896,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_road',
-    'label' => 'Address',
+    'label' => 'Adresse',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -752,7 +909,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 12,
+      'weight' => 10,
     ),
   );
 
@@ -779,7 +936,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_road_no',
-    'label' => 'House no.',
+    'label' => 'Hus nr.',
     'required' => 0,
     'settings' => array(
       'text_processing' => 0,
@@ -792,7 +949,7 @@ function valghalla_volunteers_field_default_field_instances() {
         'size' => 60,
       ),
       'type' => 'text_textfield',
-      'weight' => 13,
+      'weight' => 11,
     ),
   );
 
@@ -824,7 +981,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_address_zipcode',
-    'label' => 'Zip code',
+    'label' => 'Postnr.',
     'required' => 0,
     'settings' => array(
       'max' => 9999,
@@ -838,7 +995,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 16,
+      'weight' => 14,
     ),
   );
 
@@ -865,8 +1022,8 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_cpr_number',
-    'label' => 'CPR Number',
-    'required' => 0,
+    'label' => 'CPR Nummer',
+    'required' => 1,
     'settings' => array(
       'text_processing' => 0,
       'user_register_form' => FALSE,
@@ -879,6 +1036,43 @@ function valghalla_volunteers_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 1,
+    ),
+  );
+
+  // Exported field_instance: 'node-volunteers-field_cpr_status'
+  $field_instances['node-volunteers-field_cpr_status'] = array(
+    'bundle' => 'volunteers',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 34,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_cpr_status',
+    'label' => 'CPR status',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 25,
     ),
   );
 
@@ -911,10 +1105,9 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_cpr_valid_date',
-    'label' => 'CPR Valideret',
+    'label' => 'CPR Opslag dato',
     'required' => 0,
     'settings' => array(
-      'default_format' => 'medium',
       'default_value' => 'blank',
       'default_value2' => 'blank',
       'default_value_code' => '',
@@ -930,12 +1123,11 @@ function valghalla_volunteers_field_default_field_instances() {
         'input_format' => 'd.m.Y - H:i:s',
         'input_format_custom' => '',
         'label_position' => 'above',
-        'repeat_collapsed' => 0,
         'text_parts' => array(),
         'year_range' => '-3:+3',
       ),
       'type' => 'date_select',
-      'weight' => 8,
+      'weight' => 24,
     ),
   );
 
@@ -985,7 +1177,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 20,
+      'weight' => 18,
     ),
   );
 
@@ -1028,7 +1220,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'field_collection',
       'settings' => array(),
       'type' => 'field_collection_embed',
-      'weight' => 21,
+      'weight' => 19,
     ),
   );
 
@@ -1056,17 +1248,61 @@ function valghalla_volunteers_field_default_field_instances() {
     'entity_type' => 'node',
     'field_name' => 'field_email',
     'label' => 'Email',
-    'required' => FALSE,
+    'required' => 1,
     'settings' => array(
       'user_register_form' => FALSE,
     ),
     'widget' => array(
+      'active' => 1,
       'module' => 'email',
       'settings' => array(
         'size' => 60,
       ),
       'type' => 'email_textfield',
       'weight' => 4,
+    ),
+  );
+
+  // Exported field_instance: 'node-volunteers-field_external_signup'
+  $field_instances['node-volunteers-field_external_signup'] = array(
+    'bundle' => 'volunteers',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 31,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_external_signup',
+    'label' => 'Ekstern tilmelding',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 21,
     ),
   );
 
@@ -1107,6 +1343,85 @@ function valghalla_volunteers_field_default_field_instances() {
       ),
       'type' => 'text_textfield',
       'weight' => 6,
+    ),
+  );
+
+  // Exported field_instance: 'node-volunteers-field_meeting_time'
+  $field_instances['node-volunteers-field_meeting_time'] = array(
+    'bundle' => 'volunteers',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 30,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_meeting_time',
+    'label' => 'Mødetid',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 20,
+    ),
+  );
+
+  // Exported field_instance: 'node-volunteers-field_no_mail'
+  $field_instances['node-volunteers-field_no_mail'] = array(
+    'bundle' => 'volunteers',
+    'default_value' => array(
+      0 => array(
+        'value' => 0,
+      ),
+    ),
+    'deleted' => 0,
+    'description' => 'Deltageren er fritaget for Digital Post. Afkrydses dette felt, vil deltageren ikke modtage mails fra Valghalla.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'list',
+        'settings' => array(),
+        'type' => 'list_default',
+        'weight' => 35,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_no_mail',
+    'label' => 'Fritagelse for Digital Post',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(
+        'display_label' => 1,
+      ),
+      'type' => 'options_onoff',
+      'weight' => 26,
     ),
   );
 
@@ -1250,7 +1565,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_polling_station',
-    'label' => 'Polling Station',
+    'label' => 'Valgsted',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1260,7 +1575,7 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 10,
+      'weight' => 8,
     ),
   );
 
@@ -1269,7 +1584,7 @@ function valghalla_volunteers_field_default_field_instances() {
     'bundle' => 'volunteers',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => 'only for internal use',
+    'description' => 'kun til internt brug',
     'display' => array(
       'default' => array(
         'label' => 'inline',
@@ -1286,7 +1601,7 @@ function valghalla_volunteers_field_default_field_instances() {
     ),
     'entity_type' => 'node',
     'field_name' => 'field_polling_station_post',
-    'label' => 'Polling Station post',
+    'label' => 'Valgsted placering',
     'required' => 0,
     'settings' => array(
       'max' => '',
@@ -1300,12 +1615,12 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'number',
       'settings' => array(),
       'type' => 'number',
-      'weight' => 11,
+      'weight' => 9,
     ),
   );
 
-  // Exported field_instance: 'node-volunteers-field_rsvp'
-  $field_instances['node-volunteers-field_rsvp'] = array(
+  // Exported field_instance: 'node-volunteers-field_rolle_id'
+  $field_instances['node-volunteers-field_rolle_id'] = array(
     'bundle' => 'volunteers',
     'default_value' => NULL,
     'deleted' => 0,
@@ -1313,10 +1628,9 @@ function valghalla_volunteers_field_default_field_instances() {
     'display' => array(
       'default' => array(
         'label' => 'inline',
-        'module' => 'list',
         'settings' => array(),
-        'type' => 'list_default',
-        'weight' => 4,
+        'type' => 'hidden',
+        'weight' => 29,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1326,8 +1640,8 @@ function valghalla_volunteers_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_rsvp',
-    'label' => 'Status',
+    'field_name' => 'field_rolle_id',
+    'label' => 'Rolle',
     'required' => 0,
     'settings' => array(
       'user_register_form' => FALSE,
@@ -1337,62 +1651,27 @@ function valghalla_volunteers_field_default_field_instances() {
       'module' => 'options',
       'settings' => array(),
       'type' => 'options_select',
-      'weight' => 6,
-    ),
-  );
-
-  // Exported field_instance: 'node-volunteers-field_rsvp_comment'
-  $field_instances['node-volunteers-field_rsvp_comment'] = array(
-    'bundle' => 'volunteers',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'text',
-        'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 7,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'field_rsvp_comment',
-    'label' => 'Status besked',
-    'required' => 0,
-    'settings' => array(
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
       'weight' => 7,
     ),
   );
 
-  // Exported field_instance: 'node-volunteers-field_token'
-  $field_instances['node-volunteers-field_token'] = array(
+  // Exported field_instance: 'node-volunteers-field_valid_state'
+  $field_instances['node-volunteers-field_valid_state'] = array(
     'bundle' => 'volunteers',
-    'default_value' => NULL,
+    'default_value' => array(
+      0 => array(
+        'value' => 'invalid',
+      ),
+    ),
     'deleted' => 0,
     'description' => '',
     'display' => array(
       'default' => array(
-        'label' => 'hidden',
+        'label' => 'above',
+        'module' => 'list',
         'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 25,
+        'type' => 'list_default',
+        'weight' => 33,
       ),
       'teaser' => array(
         'label' => 'above',
@@ -1402,60 +1681,120 @@ function valghalla_volunteers_field_default_field_instances() {
       ),
     ),
     'entity_type' => 'node',
-    'field_name' => 'field_token',
-    'label' => 'Token',
-    'required' => FALSE,
+    'field_name' => 'field_valid_state',
+    'label' => 'Validering status',
+    'required' => 1,
     'settings' => array(
-      'text_processing' => 0,
       'user_register_form' => FALSE,
     ),
     'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
+      'active' => 1,
+      'module' => 'options',
+      'settings' => array(),
+      'type' => 'options_select',
+      'weight' => 23,
+    ),
+  );
+
+  // Exported field_instance: 'node-volunteers-field_volunteer_valid_date'
+  $field_instances['node-volunteers-field_volunteer_valid_date'] = array(
+    'bundle' => 'volunteers',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 32,
       ),
-      'type' => 'text_textfield',
-      'weight' => 9,
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_volunteer_valid_date',
+    'label' => 'Valideret dato',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'display_all_day' => 0,
+        'increment' => 15,
+        'input_format' => 'd/m/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_select',
+      'weight' => 22,
     ),
   );
 
   // Translatables
   // Included for use with string extractors like potx.
-  t('Address');
+  t('Adresse');
   t('BNummer');
+  t('Beskrivelse');
+  t('By');
   t('CO Navn');
-  t('CPR Number');
-  t('CPR Valideret');
-  t('City');
-  t('Description');
+  t('CPR Nummer');
+  t('CPR Opslag dato');
+  t('CPR status');
+  t('Deltageren er fritaget for Digital Post. Afkrydses dette felt, vil deltageren ikke modtage mails fra Valghalla.');
   t('Diæt');
-  t('Door / Side');
+  t('Dør / side');
+  t('Ekstern tilmelding');
   t('Email');
-  t('Floor');
-  t('House no.');
+  t('Fritagelse for Digital Post');
+  t('Hus nr.');
   t('Invitation');
   t('Label');
+  t('Mødetid');
   t('Mødetidspunkt');
   t('Parti');
   t('Parti plads');
-  t('Polling Station');
-  t('Polling Station post');
+  t('Postnr.');
   t('Påmindelse');
   t('RSVP - Aldrig');
   t('RSVP - Ja');
   t('RSVP - Nej');
+  t('Role Rækkefølge');
   t('Rolle');
+  t('Sal');
   t('Skriv dit CPR nummer inkl bindestreg. F.eks. 123456-7890.');
   t('Status');
   t('Status besked');
   t('Telefon');
   t('Telefon 2');
+  t('Timer');
   t('Token');
   t('Valg');
   t('Valginfo');
   t('Valgsted');
-  t('Zip code');
-  t('only for internal use');
+  t('Valgsted placering');
+  t('Valideret dato');
+  t('Validering status');
+  t('kun til internt brug');
 
   return $field_instances;
 }

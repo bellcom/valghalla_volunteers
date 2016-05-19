@@ -10,21 +10,22 @@
 function valghalla_volunteers_node_info() {
   $items = array(
     'roles' => array(
-      'name' => t('Roles of volunteers'),
+      'name' => t('Roller'),
       'base' => 'node_content',
-      'description' => '',
+      'description' => t('Roller'),
       'has_title' => '1',
-      'title_label' => t('Role'),
+      'title_label' => t('Rolle'),
       'help' => '',
     ),
     'volunteers' => array(
-      'name' => t('Frivillige'),
+      'name' => t('Deltagere'),
       'base' => 'node_content',
-      'description' => t('used to store information on volunteers in the system'),
+      'description' => t('bruges til at gemme oplysninger om deltagere i systemet'),
       'has_title' => '1',
       'title_label' => t('Navn'),
       'help' => '',
     ),
   );
+  drupal_alter('node_info', $items);
   return $items;
 }
